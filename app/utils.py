@@ -11,7 +11,8 @@ def ElectricityBill(kWh) -> None:
                   "x": "Months", "y": "Kilo-watt hours"}, markers=True)
     fig.update_layout(xaxis=dict(tickmode='array', tickvals=months, ticktext=[
                       str(month) for month in months]))
-    fig.show()
+    fig.write_html(
+        "eco-footprint-analyzer/app/static/graphs/electricity-bill.html")
 
 
 def WaterBill(cubic_m) -> None:
@@ -19,7 +20,8 @@ def WaterBill(cubic_m) -> None:
                   "x": "Months", "y": "Cubic Meters"}, markers=True)
     fig.update_layout(xaxis=dict(tickmode='array', tickvals=months, ticktext=[
                       str(month) for month in months]))
-    fig.show()
+    fig.write_html(
+        "eco-footprint-analyzer/app/static/graphs/water-bill.html")
 
 
 def RevenueToCF(revenue: np.array, CF: np.array, names: np.array) -> None:
@@ -29,4 +31,5 @@ def RevenueToCF(revenue: np.array, CF: np.array, names: np.array) -> None:
     fig.update_traces(marker=dict(opacity=1))
     fig.update_traces(
         hovertemplate="<b>%{hovertext}</b><br>Revenue: %{x}<br>Carbon Emissions: %{y}")
-    fig.show()
+    fig.write_html(
+        "eco-footprint-analyzer/app/static/graphs/revenue-cf.html")
