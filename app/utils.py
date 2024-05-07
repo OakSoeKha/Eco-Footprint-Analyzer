@@ -1,6 +1,5 @@
 import plotly.express as px
 import numpy as np
-import pandas as pd
 
 
 months = np.arange(1, 13)
@@ -25,11 +24,11 @@ def WaterBill(cubic_m) -> None:
 
 
 def RevenueToCF(revenue: np.array, CF: np.array, names: np.array) -> None:
-    fig = px.scatter(x=revenue, y=CF, labels={"x": "Revenue", "y": "Carbon Emissions"},
-                     hover_name=names, size=revenue, color=CF)
+    fig = px.scatter(x=CF, y=revenue, labels={"x": "Carbon Emissions", "y": "Revenue"},
+                     hover_name=names, size=revenue)
     fig.update_traces(text=names)
     fig.update_traces(marker=dict(opacity=1))
     fig.update_traces(
-        hovertemplate="<b>%{hovertext}</b><br>Revenue: %{x}<br>Carbon Emissions: %{y}")
+        hovertemplate="<b>%{hovertext}</b><br>Carbon Emissions: %{x} billion tonnes<br>Revenue: %{y} billion dollars")
     fig.write_html(
         "eco-footprint-analyzer/app/static/graphs/revenue-cf.html")
