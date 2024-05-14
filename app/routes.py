@@ -1,31 +1,30 @@
-from flask import render_template, request, redirect, url_for
-from app import app
+from flask import render_template, request, redirect, url_for, Blueprint
+
+bp = Blueprint("main", __name__)
 
 
-@app.route("/")
+@bp.route("/")
 def redirect_home():
     return redirect("/home")
 
 
-@app.route("/home")
+@bp.route("/home")
 def home():
     return render_template("home.html")
 
 
-@app.route("/calculate", methods=["GET", "POST"])
+@bp.route("/calculate", methods=["GET", "POST"])
 def calculate():
     if request.method == "POST":
-        pass
+        return redirect(url_for())
     return render_template("calculate.html")
 
 
-@app.route("/about")
+@bp.route("/about")
 def about():
-    pass
+    return render_template("about.html")
 
 
-@app.route("/contact", methods=["GET", "POST"])
+@bp.route("/history")
 def contact():
-    if request.method == "POST":
-        pass
-    return render_template("contact.html")
+    return render_template("history.html")

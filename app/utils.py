@@ -32,3 +32,22 @@ def RevenueToCF(revenue: np.array, CF: np.array, names: np.array) -> None:
         hovertemplate="<b>%{hovertext}</b><br>Carbon Emissions: %{x} billion tonnes<br>Revenue: %{y} billion dollars")
     fig.write_html(
         "eco-footprint-analyzer/app/static/graphs/revenue-cf.html")
+
+
+def EmissionsBar(**kwargs) -> None:
+    fig = px.bar(x=kwargs["months"], y=kwargs["emission"],
+                 labels={"x": "Months", "y": "Emissions"})
+    fig.update_traces(hoverinfo='text', hovertext=[f'{name}: {
+                      value}' for name, value in zip(kwargs["months"], kwargs["emission"])])
+    fig.write_html("eco-footprint-analyzer/app/static/graphs/emissions.html")
+
+
+def PercentageChart(**kwargs) -> None:
+    fig = px.pie(names=kwargs.keys(), values=kwargs.values())
+    fig.update_traces(hoverinfo='label+percent')
+    fig.write_html(
+        "eco-footprint-analyzer/app/static/graphs/percentage-chart.html")
+
+
+EmissionsBar(months=["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug",
+             "Sem", "Oct", "Nov", "Dec"], emission=[1, 5, 2, 7, 1, 9, 5, 2, 9, 3, 4, 2])
