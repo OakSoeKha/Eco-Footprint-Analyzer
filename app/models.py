@@ -10,12 +10,16 @@ EMISSIONS_RATES = {
 
 # Constants for industry weights
 INDUSTRY_WEIGHTS = {
-    "Tech": 0.06,
-    "Manufacturing": 0.075,
-    "Entertainment": 0.04,
+    "Agriculture": None,
+    "Technology": 0.06,
+    "Finance": None,
+    "Healthcare": None,
     "Education": 0.03,
-    "Advertising": 0.035,
-    "Business Services": 0.05
+    "Manufacturing": 0.075,
+    "Retail": None,
+    "Transportation": None,
+    "Hospitality": None,
+    "Media & Entertainment": 0.04
 }
 
 # Function to classify income
