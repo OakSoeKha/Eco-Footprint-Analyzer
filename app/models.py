@@ -4,8 +4,8 @@ import json
 
 # Constants for emissions rates
 EMISSIONS_RATES = {
-    "kWh": 0.3900894,  # kg per kWh
-    "cubic_m": 10.5    # kg per cubic meter
+    "kWh": 0.3900894 / 1e12,  # billion tonnes per kWh
+    "cubic_m": 10.5 / 1e12    # billion tonnes per cubic meter
 }
 
 # Constants for industry weights
@@ -49,28 +49,47 @@ def get_gdp(country):
         raise ValueError("Country name must be a string")
     api_url = f"https://api.api-ninjas.com/v1/country?name={country}"
     api_key = "nQ+01VGBAS76VC3ulQPblw==TEbhwrd0Vts2MoQO"
-    response = requests.get(api_url, headers={"X-Api-Key": api_key})
-    if response.status_code == requests.codes.ok:
-        try:
-            return json.loads(response.text)[0]["gdp_per_capita"]
-        except (IndexError, KeyError):
-            raise ValueError("Country GDP not found")
-    else:
-        response.raise_for_status()
+    try:
+        response = requests.get(api_url, headers={"X-Api-Key": api_key})
+        if response.status_code == requests.codes.ok:
+            try:
+                return json.loads(response.text)[0]["gdp_per_capita"]
+            except (IndexError, KeyError):
+                raise ValueError("Country GDP not found")
+        else:
+            response.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        print(f"API request failed: {e}")
+        # Fallback value for testing purposes
+        return 10000
 
 # Function to calculate carbon footprint
 
 
-def calculate_carbon_footprint(employee_count: np.array, electricity_usage: np.array, water_usage: np.array, revenue: np.array, industry, location):
+def calculate_carbon_footprint(employee_count, electricity_usage, water_usage, revenue, industry, location):
+    # Convert input parameters to numpy arrays
+    employee_count = np.array(employee_count)
+    electricity_usage = np.array(electricity_usage)
+    water_usage = np.array(water_usage)
+
+    annual_water = []
+    annual_electricity = []
+    annual_employee = []
+
     # Error checking for input arrays
-    if not all(isinstance(arr, np.ndarray) for arr in [employee_count, electricity_usage, water_usage, revenue]):
+    if not all(isinstance(arr, np.ndarray) for arr in [employee_count, electricity_usage, water_usage]):
         raise ValueError("All input parameters must be numpy arrays")
-    if len(set(len(arr) for arr in [employee_count, electricity_usage, water_usage, revenue])) != 1:
+    if len(set(len(arr) for arr in [electricity_usage, water_usage])) != 1:
         raise ValueError("Monthly parameters should have the same size")
 
     # Error checking for industry
     if industry not in INDUSTRY_WEIGHTS:
         raise ValueError("Invalid industry")
+
+    # Error checking for industry weight
+    industry_weight = INDUSTRY_WEIGHTS[industry]
+    if industry_weight is None:
+        raise ValueError(f"Industry weight for {industry} is not defined")
 
     gdp = classify_income(gdp_per_capita=get_gdp(country=location))
     weight = 0
@@ -92,12 +111,26 @@ def calculate_carbon_footprint(employee_count: np.array, electricity_usage: np.a
         scope1_emissions = electricity_emissions + water_emissions
 
         # Calculate scope 2 emissions
-        scope2_emissions = employee_count[i] * 4700 * (1 + weight)
+        scope2_emissions = employee_count * 4700 * \
+            (1 + weight) / 1e12  # converting to billion tonnes
 
         # Calculate total emissions including revenue-related emissions
         total_emissions = scope1_emissions + scope2_emissions + \
-            (revenue[i] * weight * INDUSTRY_WEIGHTS[industry])
+            (revenue * 1e-6 * weight * industry_weight / 12)  # revenue in millions
 
-        monthly_emissions.append(round(total_emissions, 2)/1000)
+        # Round each element in the array to 10 decimal places
+        rounded_emissions = np.round(total_emissions, 10)
 
-    return np.array(monthly_emissions)
+        # Append the rounded emissions to the monthly_emissions list
+        monthly_emissions.append(rounded_emissions)
+
+        annual_electricity.append(electricity_emissions)
+        annual_water.append(water_emissions)
+        annual_employee.append(scope2_emissions)
+
+    return np.array(monthly_emissions), annual_electricity, annual_water, annual_employee
+
+
+def parse(string) -> list:
+    result = string.split(", ")
+    return result
