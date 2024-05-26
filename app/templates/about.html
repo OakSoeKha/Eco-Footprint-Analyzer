@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width">
+      <title>ECOMETER: About Us</title>
+      <link href="{{ url_for('static',filename='styles/style.css') }}" rel="stylesheet" type="text/css" />
+   </head>
+   <body>
+      <header>
+         <div class="brand">
+            <img src="{{ url_for('static',filename='images/test-img2.png') }}">
+            <h1>EcoMeter</h1>
+         </div>
+         <nav>
+            <ul>
+               <li><a href="/">Home</a></li>
+               <li><a href="/calculate">Calculate</a></li>
+               <li><a href="/history">History</a></li>
+               <li><a href="/about">Discover</a></li>
+               <li><a href="/signup">Get Started</a></li>
+            </ul>
+         </nav>
+      </header>
+      <main id="main2">
+         <div class="intro-index">
+            <div class="intro-text">
+               <h1>
+                  <span id="border">ABOUT</span> <span id="green">US</span>
+               </h1>
+               <div class="test-box1">
+                  <p>Our Mission</p>
+                  <p id="below-text1">
+                     At EcoMeter, we strive to empower individuals and businesses to reduce their carbon footprint through
+                     accurate, easy-to-use carbon emissions calculators and actionable insights.
+                  </p>
+               </div>
+            </div>
+         </div>
+         <div class="calc-info">
+            <div class="calc-intro">
+               <h2>Who We Are</h2>
+               <p>EcoMeter is a dedicated team of environmental enthusiasts, tech experts, and data scientists committed to
+                  making a positive impact on the planet. We believe that informed individuals are the key to a sustainable
+                  future.
+               </p>
+            </div>
+            <div class="calc-intro">
+               <h2>What We Do</h2>
+               <p>We provide a platform that helps users track and understand their carbon emissions. Our tools are designed to
+                  be intuitive and accessible, offering personalized recommendations to help reduce environmental impact.
+               </p>
+            </div>
+            <div class="calc-intro">
+               <h2>Our Vision</h2>
+               <p>We envision a world where every individual is aware of their carbon footprint and actively takes steps to
+                  minimize it. Through education and innovative technology, we aim to drive global change towards a more
+                  sustainable future.
+               </p>
+            </div>
+         </div>
+         <div class="animated-content">
+            <h2>Why Choose EcoMeter?</h2>
+            <div class="animated-text">
+               <span>Reduce</span>
+               <span>Track</span>
+               <span>Understand</span>
+               <span>Act</span>
+            </div>
+            <p class="explanation">
+               EcoMeter offers comprehensive solutions for businesses to reduce their carbon footprint. With our intuitive
+               tools
+               and actionable insights, you can track your emissions, understand your environmental impact, and take targeted
+               actions to mitigate climate change.
+            </p>
+         </div>
+         <div class="test-box1" style="width:42%">
+            <h2>Contact Us</h2>
+            <p id="below-text1">Have questions? Reach out to us at <span id="green">contact@ecometer.com</span></p>
+         </div>
+      </main>
+      <script src="{{url_for('static', filename='script/script.js')}}"></script>
+   </body>
+</html>

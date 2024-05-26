@@ -1,16 +1,18 @@
+import os
 import matplotlib.colors as mcolors
-import matplotlib.pyplot as plt
-import plotly.express as px
 import plotly.graph_objects as go
+import plotly.express as px
 import numpy as np
-import plotly.graph_objs as go
-from colour import Color
+from flask import url_for
 
-months = ["January", "Febuary", "March", "April", "May", "June",
+months = ["January", "February", "March", "April", "May", "June",
           "July", "August", "September", "October", "November", "December"]
 
+# Define the base directory for the graphs
+BASE_DIR = "C:/Users/Lenovo/Documents/Code/projects/Ecometer/app/static/graphs"
 
-def ElectricityBill(kWh, id, multiple_series=False) -> None:
+
+def ElectricityBill(kWh, ide, multiple_series=False) -> None:
     fig = go.Figure()
     if not multiple_series:
         fig.add_trace(go.Scatter(x=months, y=kWh,
@@ -23,11 +25,14 @@ def ElectricityBill(kWh, id, multiple_series=False) -> None:
     fig.update_layout(xaxis=dict(tickmode='array', tickvals=months, ticktext=[str(month) for month in months]),
                       yaxis=dict(title='Kilo-watt hours'),
                       template='plotly_dark')
-    fig.write_html(
-        f"app/static/graphs/e-{id}.html")
+    fig.update_layout(title=dict(
+        text="Monthly Electric Bills", font=dict(size=30)))
+
+    file_path = os.path.join(BASE_DIR, f"e-{ide}.html")
+    fig.write_html(file_path)
 
 
-def WaterBill(cubic_m, id, multiple_series=False) -> None:
+def WaterBill(cubic_m, ide, multiple_series=False) -> None:
     fig = go.Figure()
     if not multiple_series:
         fig.add_trace(go.Scatter(x=months, y=cubic_m,
@@ -40,30 +45,25 @@ def WaterBill(cubic_m, id, multiple_series=False) -> None:
     fig.update_layout(xaxis=dict(tickmode='array', tickvals=months, ticktext=[str(month) for month in months]),
                       yaxis=dict(title='Cubic Meters'),
                       template='plotly_dark')
+    fig.update_layout(title=dict(
+        text="Monthly Water Bills", font=dict(size=30)))
 
-    fig.write_html(f"app/static/graphs/w-{id}.html")
-
-
-def RevenueToCF(revenue: np.array, CF: np.array, names: np.array, id) -> None:
-    revenue_million = revenue * 1e-6  # convert to millions
-    CF_billion_tonnes = CF  # already in billion tonnes
-    fig = px.scatter(x=CF_billion_tonnes, y=revenue_million, labels={
-                     "x": "Carbon Emissions (billion tonnes)", "y": "Revenue (millions)"}, hover_name=names, size=revenue_million)
-    fig.update_traces(text=names)
-    fig.update_traces(marker=dict(opacity=1))
-    fig.update_traces(
-        hovertemplate="<b>%{hovertext}</b><br>Carbon Emissions: %{x} billion tonnes<br>Revenue: %{y} million dollars")
-    fig.update_layout(template='plotly_dark')
-    fig.write_html(f"app/static/graphs/rcf-{id}.html")
+    file_path = os.path.join(BASE_DIR, f"w-{ide}.html")
+    fig.write_html(file_path)
 
 
 def EmissionsBar(**kwargs) -> None:
+    ide = kwargs.pop('ide')  # Extract ide from kwargs
     fig = px.bar(x=months, y=kwargs["emission"],
                  labels={"x": "Months", "y": "Emissions (billion tonnes)"})
     fig.update_traces(hoverinfo='text', hovertext=[f'{name}: {
                       value}' for name, value in zip(months, kwargs["emission"])])
     fig.update_layout(template='plotly_dark')
-    fig.write_html(f"app/static/graphs/e-{kwargs[id]}.html")
+    fig.update_layout(title=dict(
+        text="Monthly Emissions", font=dict(size=30)))
+
+    file_path = os.path.join(BASE_DIR, f"em-{ide}.html")
+    fig.write_html(file_path)
 
 
 def generate_purple_shades(base_color, num_shades):
@@ -76,6 +76,7 @@ def generate_purple_shades(base_color, num_shades):
 
 
 def PercentageChart(**kwargs) -> None:
+    ide = kwargs.pop('ide')  # Extract ide from kwargs
     labels = list(kwargs.keys())
     values = list(kwargs.values())
 
@@ -88,6 +89,8 @@ def PercentageChart(**kwargs) -> None:
                     marker=dict(colors=colors)))
     fig.update_traces(hoverinfo='label+percent')
     fig.update_layout(template='plotly_dark')
+    fig.update_layout(title=dict(
+        text="Emission Contributors", font=dict(size=30)))
 
-    fig.write_html(
-        f"C:/Users/Lenovo/Documents/Code/projects/Eco-Footprint-Analyzer/app/static/graphs/p-{id}.html")
+    file_path = os.path.join(BASE_DIR, f"p-{ide}.html")
+    fig.write_html(file_path)

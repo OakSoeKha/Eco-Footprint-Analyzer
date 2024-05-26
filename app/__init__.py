@@ -8,7 +8,7 @@ import numpy as np
 app = Flask(__name__)
 app.secret_key = "ABC123"
 
-DATABASE = "Eco-Footprint-Analyzer/users/data.db"
+DATABASE = "C:/Users/Lenovo/Documents/Code/projects/Ecometer/users/data.db"
 
 
 def get_db():
@@ -30,13 +30,14 @@ def home():
     return render_template("index.html")
 
 
-@app.route("/register", methods=["GET", "POST"])
-def register():
+@app.route("/signup", methods=["GET", "POST"])
+def signup():
     if request.method == "POST":
-        username = request.form.get("username")
-        email = request.form.get("email")
-        password = request.form.get("password")
-        hashed_password = generate_password_hash(password, method='sha256')
+        username = request.form.get("nameSignup")
+        email = request.form.get("emailSignup")
+        password = request.form.get("passwordSignup")
+        hashed_password = generate_password_hash(
+            password, method='pbkdf2:sha256')
 
         db = get_db()
         cursor = db.cursor()
@@ -44,22 +45,21 @@ def register():
                        (username, email, hashed_password))
         db.commit()
 
-        return redirect("/login")
-    return render_template("register.html")
+        return redirect("/signin")
+    return render_template("signup.html")
 
 
-@app.route("/login", methods=["GET", "POST"])
-def login():
+@app.route("/signin", methods=["GET", "POST"])
+def signin():
     if request.method == "POST":
-        email = request.form.get("email")
-        password = request.form.get("password")
+        email = request.form.get("emailSignin")
+        password = request.form.get("passwordSignin")
 
         db = get_db()
         cursor = db.cursor()
         cursor.execute('SELECT * FROM users WHERE email = ?', (email,))
         user = cursor.fetchone()
 
-        # Assuming password is the 4th column
         if user and check_password_hash(user[3], password):
             session['user_id'] = user[0]
             session['username'] = user[1]
@@ -67,7 +67,7 @@ def login():
         else:
             return "Invalid credentials. Please try again."
 
-    return render_template("login.html")
+    return render_template("signin.html")
 
 
 @app.route("/logout")
@@ -80,84 +80,77 @@ def logout():
 @app.route("/calculate", methods=["GET", "POST"])
 def calculate():
     if 'user_id' not in session:
-        return redirect(url_for('login'))
+        return redirect(url_for('signin'))
 
     if request.method == "POST":
         user_id = session['user_id']
-
-        # Parse and validate input data
         try:
-            electricity = np.array(
-                [float(i) for i in parse(request.form.get("electricity"))])
-            water = np.array([float(i)
-                             for i in parse(request.form.get("water"))])
-            employees = int(request.form.get("employees"))
-            location = request.form.get("location")
-            revenue = np.array([float(request.form.get("revenue"))])
+            employeeCount = float(request.form.get("employeeCount"))
+            electricityUsage = [float(x) for x in parse(
+                request.form.get("electricityUsage"))]
+            waterUsage = [float(x)
+                          for x in parse(request.form.get("waterUsage"))]
+            revenue = float(request.form.get("revenue"))
             industry = request.form.get("industry")
+            country = request.form.get("country")
+
+            print(employeeCount, electricityUsage,
+                  waterUsage, revenue, industry, country)
+            print(type(employeeCount), type(electricityUsage), type(
+                waterUsage), type(revenue), type(industry), type(country))
+
         except (ValueError, TypeError) as e:
+            print(f"Error in input data parsing: {e}")
             return "Invalid input data. Please ensure all fields are correctly filled."
 
         # Calculate carbon footprint
         try:
             emissions, annual_electricity, annual_water, annual_employee = calculate_carbon_footprint(
-                employees, electricity, water, revenue, industry, location
+                employee_count=employeeCount,
+                electricity_usage=electricityUsage,
+                water_usage=waterUsage,
+                revenue=revenue,
+                industry=industry,
+                location=country
             )
+            print("Calculated Emissions: ", emissions)
+            print("Annual Electricity Emissions: ", annual_electricity)
+            print("Annual Water Emissions: ", annual_water)
+            print("Annual Employee Emissions: ", annual_employee)
+
         except Exception as e:
+            print(f"Error calculating carbon footprint: {e}")
             return f"Error calculating carbon footprint: {e}"
 
-        # Generate and save graphs
+        # Store and visualize data
         try:
-            e_bill_path = f"app/static/graphs/e-{user_id}.html"
-            w_bill_path = f"app/static/graphs/w-{user_id}.html"
-            rcf_path = f"app/static/graphs/rcf-{user_id}.html"
-            emissions_bar_path = f"app/static/graphs/e-{user_id}.html"
-            percentage_chart_path = f"app/static/graphs/p-{user_id}.html"
-
-            ElectricityBill(electricity, user_id)
-            WaterBill(water, user_id)
-            RevenueToCF(revenue, emissions, np.array([industry]), user_id)
-            EmissionsBar(emission=emissions, id=user_id)
+            ElectricityBill(electricityUsage, ide=user_id)
+            WaterBill(waterUsage, ide=user_id)
+            EmissionsBar(emission=emissions, ide=user_id)
             PercentageChart(
-                annual_electricity=sum(annual_electricity),
-                annual_water=sum(annual_water),
-                annual_employee=sum(annual_employee),
-                id=user_id
+                Employee_Emissions=sum(annual_employee),
+                Electricity_Emissions=sum(annual_electricity),
+                Water_Emissions=sum(annual_water),
+                ide=user_id
             )
-
-            # Store graph file paths in the database
-            db = get_db()
-            cursor = db.cursor()
-            cursor.execute('INSERT INTO graphs (id, file_location_1, file_location_2, file_location_3, file_location_4, file_location_5) VALUES (?, ?, ?, ?, ?, ?)',
-                           (user_id, e_bill_path, w_bill_path, rcf_path, emissions_bar_path, percentage_chart_path))
-            db.commit()
+            print("Emissions stored and charts generated")
 
         except Exception as e:
+            print(f"Error generating graphs: {e}")
             return f"Error generating graphs: {e}"
 
-        return redirect("/history")
-
+        return render_template("calculate.html", idd=user_id)
     return render_template("calculate.html")
 
 
 @app.route("/history")
 def history():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
+    return render_template("history.html")
 
-    user_id = session['user_id']
-    db = get_db()
-    cursor = db.cursor()
-    cursor.execute(
-        'SELECT file_location_1, file_location_2, file_location_3, file_location_4, file_location_5 FROM graphs WHERE id = ?', (user_id,))
-    graphs = cursor.fetchone()
 
-    if graphs:
-        graphs_list = list(graphs)
-    else:
-        graphs_list = []
-
-    return render_template("history.html", graphs=graphs_list)
+@app.route("/about")
+def about():
+    return render_template("about.html")
 
 
 if __name__ == "__main__":

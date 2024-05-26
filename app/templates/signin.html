@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>ECOMETER: Sign In</title>
+  <link href="{{ url_for('static',filename='styles/style2.css') }}" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+
+  <header>
+    <div class="brand">
+      <img src="{{ url_for('static',filename='images/test-img2.png') }}">
+      <h1>EcoMeter</h1>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/calculate">Calculate</a></li>
+        <li><a href="/history">History</a></li>
+        <li><a href="/about">Discover</a></li>
+        <li><a href="/signup">Get Started</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main3">
+
+    <div class="signin-intro">
+      <p>Welcome To EcoMeter!</p>
+    </div>
+
+    <div class="signin-container"">
+    <form action="/signin" method="POST">
+
+      <label for=" emailSignin">Email:</label>
+      <input type="email" id="emailSignin" name="emailSignin" placeholder="Enter your email" required> <br> <br>
+
+      <label for="passwordSignin">Password:</label>
+      <input type="password" id="passwordSignin" name="passwordSignin" placeholder="Enter your password" required>
+
+      <input type="submit" value="Log In">
+
+      </form>
+
+      <p id="signup-redirection">Don't have an account? <a href="/signup">Sign Up</a></p>
+
+
+
+    </div>
+
+  </main>
+
+</body>
+
+</html>

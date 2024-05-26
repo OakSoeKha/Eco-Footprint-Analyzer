@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width">
+      <title>ECOMETER: History</title>
+      <link href="{{ url_for('static',filename='styles/style.css') }}" rel="stylesheet" type="text/css" />
+      <style>
+         .fade-in {
+         animation: fadeIn 2s ease-in;
+         }
+         @keyframes fadeIn {
+         from {
+         opacity: 0;
+         }
+         to {
+         opacity: 1;
+         }
+         }
+         .slide-in {
+         animation: slideIn 2s ease-in;
+         }
+         @keyframes slideIn {
+         from {
+         transform: translateY(100px);
+         opacity: 0;
+         }
+         to {
+         transform: translateY(0);
+         opacity: 1;
+         }
+         }
+         .content {
+         margin: 20px;
+         padding: 20px;
+         }
+         .description {
+         margin: 20px 0;
+         font-size: 1.2em;
+         line-height: 1.6em;
+         }
+      </style>
+   </head>
+   <body>
+      <header>
+         <div class="brand">
+            <img src="{{ url_for('static',filename='images/test-img2.png') }}">
+            <h1>EcoMeter</h1>
+         </div>
+         <nav>
+            <ul>
+               <li><a href="/">Home</a></li>
+               <li><a href="/calculate">Calculate</a></li>
+               <li><a href="/history">History</a></li>
+               <li><a href="/about">Discover</a></li>
+               <li><a href="/signup">Get Started</a></li>
+            </ul>
+         </nav>
+      </header>
+      <main class="content fade-in">
+         <h1>Global Carbon Emissions History</h1>
+         <div class="description slide-in">
+            <p>The history of carbon emissions provides a comprehensive look at how human activities have influenced the
+               environment over the centuries. Understanding this data helps us make informed decisions about future policies
+               and practices to reduce our carbon footprint.
+            </p>
+         </div>
+         <div class="description slide-in">
+            <p>Below is an interactive chart showcasing the annual CO2 emissions per country. This data is crucial for
+               understanding the global impact and for planning strategies to mitigate climate change.
+            </p>
+         </div>
+         <iframe src="https://ourworldindata.org/grapher/annual-co2-emissions-per-country?country=~OWID_WRL&tab=chart"
+            loading="lazy" style="width: 100%; height: 600px; border: 0px none;" allow="web-share; clipboard-write"></iframe>
+         <div class="description slide-in">
+            <p>By examining the trends in carbon emissions, we can see the progress made by different countries in reducing
+               their carbon output and the areas where more efforts are needed. Let's work together to build a sustainable
+               future.
+            </p>
+         </div>
+      </main>
+      <script src="{{url_for('static', filename='script/script.js')}}"></script>
+   </body>
+</html>

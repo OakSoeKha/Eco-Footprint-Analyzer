@@ -1,0 +1,145 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&family=Mulish:ital,wght@0,200..1000;1,200..1000&family=Unica+One&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Merriweather Sans", sans-serif;
+  font-weight: 500;
+  list-style-type: none;
+  text-decoration: none;
+}
+
+body {
+  background-color: black;
+  color: white;
+  width: 90%;
+  margin: 0 auto;
+  --dot-bg: #000000;
+  --dot-color: #303030;
+  --dot-size: 2px;
+  --dot-space: 20px;
+  background:
+    linear-gradient(90deg, var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%) center / var(--dot-space) var(--dot-space),
+    linear-gradient(var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%) center / var(--dot-space) var(--dot-space),
+    var(--dot-color);
+}
+
+header {
+  display: flex;
+  align-items: center;
+  padding: 10px 0px;
+  overflow: hidden;
+  justify-content: space-between;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  width: 50%;
+  font-size: 13px;
+}
+
+.brand img {
+  width: 50px;
+  margin-right: 10px;
+}
+
+nav {
+  width: 49%;
+}
+
+ul {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+nav a {
+  color: white;
+  padding: 10px 17px;
+  background-color: black;
+  border: 1px solid green;
+  border-radius: 20px;
+  letter-spacing: 1px;
+}
+
+nav a:hover {
+  color: green;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* signup */
+.signup-container,
+.signin-container {
+  border: 1px solid #4f4f4f;
+  background-color: #000000;
+  padding: 25px;
+  border-radius: 8px;
+  height: auto;
+  width: 50%;
+  margin: 0 auto;
+  margin-top: 30px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  outline: none;
+  border: 1px solid #4f4f4f;
+  background-color: #1f1f1f;
+  color: #9e9e9e;
+  margin-top: 5px;
+  border-radius: 5px;
+}
+
+input[type="submit"] {
+  margin: 0 auto;
+  width: 100%;
+  padding: 10px;
+  outline: none;
+  background-color: #636EFA;
+  letter-spacing: 1px;
+  color: #ffffff;
+  margin-top: 40px;
+  margin-bottom: 20px;
+  transition: 0.1s ease;
+}
+
+input[type="submit"]:hover {
+  background-color: #7b84f9;
+  color: #ffffff;
+}
+
+label {
+  font-weight: 200;
+}
+
+#login-redirection,
+#signup-redirection {
+  font-size: 15px;
+}
+
+#login-redirection a,
+#signup-redirection a {
+  color: #636EFA;
+}
+
+.signup-intro,
+.signin-intro {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 30px;
+  letter-spacing: 1px;
+}
