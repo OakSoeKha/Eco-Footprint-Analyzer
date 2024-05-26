@@ -82,8 +82,9 @@ def calculate():
     if 'user_id' not in session:
         return redirect(url_for('signin'))
 
+    user_id = session.get('user_id')  # Retrieve user ID from session
+
     if request.method == "POST":
-        user_id = session['user_id']
         try:
             # Retrieve and parse form data
             employeeCount = float(request.form.get("employeeCount"))
@@ -95,17 +96,7 @@ def calculate():
             industry = request.form.get("industry")
             country = request.form.get("country")
 
-            print(employeeCount, electricityUsage,
-                  waterUsage, revenue, industry, country)
-            print(type(employeeCount), type(electricityUsage), type(
-                waterUsage), type(revenue), type(industry), type(country))
-
-        except (ValueError, TypeError) as e:
-            print(f"Error in input data parsing: {e}")
-            return render_template("calculate.html", error="Invalid input data. Please ensure all fields are correctly filled.")
-
-        # Calculate carbon footprint
-        try:
+            # Calculate carbon footprint
             emissions, annual_electricity, annual_water, annual_employee = calculate_carbon_footprint(
                 employee_count=employeeCount,
                 electricity_usage=electricityUsage,
@@ -114,17 +105,8 @@ def calculate():
                 industry=industry,
                 location=country
             )
-            print("Calculated Emissions: ", emissions)
-            print("Annual Electricity Emissions: ", annual_electricity)
-            print("Annual Water Emissions: ", annual_water)
-            print("Annual Employee Emissions: ", annual_employee)
 
-        except Exception as e:
-            print(f"Error calculating carbon footprint: {e}")
-            return render_template("calculate.html", error=f"Error calculating carbon footprint: {e}")
-
-        # Store and visualize data
-        try:
+            # Store and visualize data
             ElectricityBill(electricityUsage, ide=user_id)
             WaterBill(waterUsage, ide=user_id)
             EmissionsBar(emission=emissions, ide=user_id)
@@ -134,15 +116,15 @@ def calculate():
                 Water_Emissions=sum(annual_water),
                 ide=user_id
             )
-            print("Emissions stored and charts generated")
+
+            return render_template("calculate.html", idd=user_id, success="Calculation successful")
 
         except Exception as e:
-            print(f"Error generating graphs: {e}")
-            return render_template("calculate.html", error=f"Error generating graphs: {e}")
+            print(f"Error calculating carbon footprint: {e}")
+            return render_template("calculate.html", error=f"Error calculating carbon footprint: {e}")
 
-        return render_template("calculate.html", idd=user_id, success="Calculation successful")
-
-    return render_template("calculate.html")
+    if request.method == "GET":
+        return render_template("calculate.html", idd=user_id)
 
 
 @app.route("/history")
