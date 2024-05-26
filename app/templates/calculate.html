@@ -153,6 +153,8 @@
             <iframe src="{{ url_for('static', filename='graphs/w-' ~ idd ~ '.html') }}"></iframe>
             <iframe src="{{ url_for('static', filename='graphs/em-' ~ idd ~ '.html') }}"></iframe>
             <iframe src="{{ url_for('static', filename='graphs/p-' ~ idd ~ '.html') }}"></iframe>
+         {% elif error %}
+            <p>{{error}}</p>
          {% else %}
             <p>No data to display. Please perform a calculation first.</p>
          {% endif %}
