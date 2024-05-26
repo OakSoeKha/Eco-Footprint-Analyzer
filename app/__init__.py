@@ -85,6 +85,7 @@ def calculate():
     if request.method == "POST":
         user_id = session['user_id']
         try:
+            # Retrieve and parse form data
             employeeCount = float(request.form.get("employeeCount"))
             electricityUsage = [float(x) for x in parse(
                 request.form.get("electricityUsage"))]
@@ -101,7 +102,7 @@ def calculate():
 
         except (ValueError, TypeError) as e:
             print(f"Error in input data parsing: {e}")
-            return "Invalid input data. Please ensure all fields are correctly filled."
+            return render_template("calculate.html", error="Invalid input data. Please ensure all fields are correctly filled.")
 
         # Calculate carbon footprint
         try:
@@ -120,7 +121,7 @@ def calculate():
 
         except Exception as e:
             print(f"Error calculating carbon footprint: {e}")
-            return f"Error calculating carbon footprint: {e}"
+            return render_template("calculate.html", error=f"Error calculating carbon footprint: {e}")
 
         # Store and visualize data
         try:
@@ -137,9 +138,10 @@ def calculate():
 
         except Exception as e:
             print(f"Error generating graphs: {e}")
-            return f"Error generating graphs: {e}"
+            return render_template("calculate.html", error=f"Error generating graphs: {e}")
 
-        return render_template("calculate.html", idd=user_id)
+        return render_template("calculate.html", idd=user_id, success="Calculation successful")
+
     return render_template("calculate.html")
 
 

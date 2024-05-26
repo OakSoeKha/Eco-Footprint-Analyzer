@@ -1,11 +1,12 @@
 import numpy as np
 import requests
 import json
+import random
 
 # Constants for emissions rates
 EMISSIONS_RATES = {
-    "kWh": 0.3900894 / 1e6,  # kg CO2e per kWh
-    "cubic_m": 10.5 / 1e6    # kg CO2e per cubic meter
+    "kWh": 0.3900894 / 1e3,  # kg CO₂e per kWh
+    "cubic_m": 10.5 / 1e3    # kg CO₂e per cubic meter
 }
 
 # Constants for industry weights
@@ -59,8 +60,6 @@ INDUSTRY_WEIGHTS = {
     "Health & Wellness": 0.02
 }
 
-# Function to classify income
-
 
 def classify_income(gdp_per_capita):
     if not isinstance(gdp_per_capita, (int, float)):
@@ -77,8 +76,6 @@ def classify_income(gdp_per_capita):
         return (gdp_per_capita - 50000) / (100000 - 50000)
     else:
         return 1
-
-# Function to fetch GDP for a given country
 
 
 def get_gdp(country):
@@ -99,8 +96,6 @@ def get_gdp(country):
         print(f"API request failed: {e}")
         # Fallback value for testing purposes
         return 10000
-
-# Function to calculate carbon footprint
 
 
 def calculate_carbon_footprint(employee_count, electricity_usage, water_usage, revenue, industry, location):
@@ -123,13 +118,15 @@ def calculate_carbon_footprint(employee_count, electricity_usage, water_usage, r
     industry_weight = INDUSTRY_WEIGHTS[industry]
     gdp = classify_income(gdp_per_capita=get_gdp(country=location))
 
-    weight = 0
+    # Adjust weights to balance the contributions of each factor
     if gdp == 1 or gdp == 0:
-        weight = 1
+        gdp_weight = 1
     elif gdp <= 0.4285714285714286:
-        weight = 0.4 + abs(0.4285714285714286 - gdp) * 1.5
+        gdp_weight = 0.4 + abs(0.4285714285714286 - gdp) * 1.5
     else:
-        weight = 0.8 - abs(0.5714285714285714 - gdp) * 1.5
+        gdp_weight = 0.8 - abs(0.5714285714285714 - gdp) * 1.5
+
+    employee_emissions_factor = 2.5  # kg CO₂e per employee per month
 
     # Calculate emissions for each month
     monthly_emissions = []
@@ -141,26 +138,26 @@ def calculate_carbon_footprint(employee_count, electricity_usage, water_usage, r
 
     for i in range(len(electricity_usage)):
         # Calculate emissions for electricity and water usage for this month
-        # kg CO₂e
-        electricity_emissions = EMISSIONS_RATES["kWh"] * electricity_usage[i]
-        # kg CO₂e
-        water_emissions = EMISSIONS_RATES["cubic_m"] * water_usage[i]
+        # Increase impact of electricity
+        # Increase the scaling factor
+        electricity_emissions = EMISSIONS_RATES["kWh"] * \
+            electricity_usage[i] * 50
+        # Increase impact of water
+        # Increase the scaling factor
+        water_emissions = EMISSIONS_RATES["cubic_m"] * water_usage[i] * 50
 
         # Calculate scope 1 emissions
         scope1_emissions = electricity_emissions + water_emissions  # kg CO₂e
 
-        # Calculate scope 2 emissions (assuming an average value for employee emissions)
-        # kg CO₂e per employee per month (average estimate)
-        employee_emissions = 500
-        scope2_emissions = employee_count[0] * employee_emissions  # kg CO₂e
+        # Calculate scope 2 emissions (using a more realistic value for employee emissions)
+        scope2_emissions = (
+            employee_count[0] * employee_emissions_factor) * random.uniform(0.75, 1)
 
-        # Calculate scope 3 emissions (using revenue as a proxy for the business activity)
-        scope3_emissions = monthly_revenue * \
-            industry_weight * weight  # metric tonnes CO₂e
-
-        # Convert kg CO₂e to metric tonnes and sum up all scopes
-        total_emissions = (scope1_emissions / 1e3) + (scope2_emissions /
-                                                      1e3) + scope3_emissions  # metric tonnes CO₂e
+        # Calculate total emissions including revenue-related emissions
+        scope3_emissions = (monthly_revenue * 1e-6 *
+                            gdp_weight * industry_weight)  # metric tonnes CO₂e
+        total_emissions = (scope1_emissions + scope2_emissions) / \
+            1e3 + scope3_emissions  # metric tonnes
 
         # Round each element in the array to 10 decimal places
         rounded_emissions = np.round(total_emissions, 10)
