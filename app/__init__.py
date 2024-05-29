@@ -1,5 +1,6 @@
 from flask import Flask, session, redirect, render_template, request, url_for, g
 import sqlite3
+import os
 from models import calculate_carbon_footprint, parse
 from werkzeug.security import generate_password_hash, check_password_hash
 from utils import *
@@ -8,7 +9,9 @@ import numpy as np
 app = Flask(__name__)
 app.secret_key = "ABC123"
 
-DATABASE = "C:/Users/Lenovo/Documents/Code/projects/Ecometer/users/data.db"
+# Get the absolute path of the current directory (app)
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+DATABASE = os.path.join(BASE_DIR, '..', 'users', 'data.db')
 
 
 def get_db():
@@ -45,7 +48,7 @@ def signup():
                        (username, email, hashed_password))
         db.commit()
 
-        return redirect("/signin")
+        return redirect(url_for('signin'))
     return render_template("signup.html")
 
 
@@ -63,7 +66,7 @@ def signin():
         if user and check_password_hash(user[3], password):
             session['user_id'] = user[0]
             session['username'] = user[1]
-            return redirect("/calculate")
+            return redirect(url_for('calculate'))
         else:
             return "Invalid credentials. Please try again."
 

@@ -9,7 +9,8 @@ months = ["January", "February", "March", "April", "May", "June",
           "July", "August", "September", "October", "November", "December"]
 
 # Define the base directory for the graphs
-BASE_DIR = "C:/Users/Lenovo/Documents/Code/projects/Ecometer/app/static/graphs"
+BASE_DIR = os.path.abspath(os.path.join(
+    os.path.dirname(__file__), 'static', 'graphs'))
 
 
 def ElectricityBill(kWh, ide, multiple_series=False) -> None:
