@@ -22,7 +22,8 @@ We plan to integrate more detailed analytics, offer personalized recommendations
 <ul>
   <li><a href="#">Devpost Project</a></li>
   <li><a href="#">Website Link</a></li>
-  <li><a href="#">Demo Link</a></li>
+  <li><a href="https://youtu.be/yNEYvwxVqFw?si=J5xThifi_Sp2tOjy">Demo Link</a></li>
+  <li><a href="https://docs.google.com/document/d/1kptFIcG4wbcMseWDRjuXfk7EEsg_GL8LVscZlkKfb5c/edit?usp=sharing">PDF</a></li>
 </ul>
 <h3>Project Contributors:</h3>
 <p>
