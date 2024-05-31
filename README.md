@@ -26,7 +26,7 @@ We gained advanced skills in CSS styling, JavaScript, Python, and backend featur
 ## What's next for EcoMeter
 Next, we plan to integrate more detailed analytics, offer personalized recommendations for reducing emissions, log previous history, and expand our platform to include real-time monitoring and reporting tools. We aim to continuously enhance EcoMeter to better serve businesses in their sustainability journey.
 
-<br><br>
+
 <h3>Submitted To:</h3>
 <p>
   <a href="https://csbase-climatehack.devpost.com/?ref_feature=challenge&ref_medium=your-open-hackathons&ref_content=Submissions+open">CS Base Climate Hack</a>
