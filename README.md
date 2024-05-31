@@ -1,17 +1,32 @@
 ## EcoMeter: Calculate Your Carbon Emissions
 
-<h3>What It Does:</h3>
-<p>
-  EcoMeter utilizes user data to accurately calculate and display company carbon emissions, helping your company understand and manage your environmental impact.
-</p>
-<h3>How To Get Started:</h3>
-<p>
-  Sign up on our platform, input your company’s relevant data, and let EcoMeter analyze and provide a comprehensive report on your carbon footprint.
-</p>
-<h3>Future Plans:</h3>
-<p>
-We plan to integrate more detailed analytics, offer personalized recommendations for reducing emissions, log previous history, and expand our platform to include real-time monitoring and reporting tools.
-</p>
+## Inspiration
+The growing urgency of addressing climate change and the need for businesses to understand and reduce their carbon footprint inspired us to create EcoMeter.
+
+## What it does
+EcoMeter utilizes user data to accurately calculate and display your carbon emissions, helping you understand and manage your environmental impact. We provide pages where users and companies can log in or sign up to calculate their carbon emissions based on various parameters. These parameters generate a graph that offers insights into their carbon footprint and suggestions for reduction. Users and companies can revisit the history page to review their data, helping them stay on track with their efforts to reduce carbon emissions.
+
+## How we built it
+We developed the frontend using HTML, CSS, and JavaScript, while the backend for the sign-up and history pages is built using Python and Flask.
+
+
+## Challenges we ran into
+File Paths: Managing file paths to save graphs in specified locations was tricky.
+Carbon Footprint Calculation: Accurately calculating the carbon footprint required careful consideration.
+Frontend-Backend Integration: Connecting the front end to the backend presented difficulties.
+CSS Styling: Some CSS styling aspects were particularly challenging.
+Aesthetics: We dedicated a significant amount of time to ensure our pages looked great, experimenting with various styles and spending hours on design and graph creation.
+
+## Accomplishments that we're proud of
+We're excited to have completed our first project that implements a backend, thanks to the collaborative efforts of our team members. It was a great experience learning how to connect the frontend with the backend, and we're proud of what we've achieved together.
+
+## What we learned
+We gained advanced skills in CSS styling, JavaScript, Python, and backend features and frameworks.
+
+## What's next for EcoMeter
+Next, we plan to integrate more detailed analytics, offer personalized recommendations for reducing emissions, log previous history, and expand our platform to include real-time monitoring and reporting tools. We aim to continuously enhance EcoMeter to better serve businesses in their sustainability journey.
+
+<br><br>
 <h3>Submitted To:</h3>
 <p>
   <a href="https://csbase-climatehack.devpost.com/?ref_feature=challenge&ref_medium=your-open-hackathons&ref_content=Submissions+open">CS Base Climate Hack</a>
